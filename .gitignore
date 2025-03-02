@@ -3,3 +3,4 @@ rootsf/*
 *.swp
 *.o
 *.bin
+initramfs*
