@@ -8,4 +8,4 @@
 
 [submodule "opensbi"]
 	path = opensbi
-	url = git@github.com:riscv/opensbi.git
+	url = git@github.com:riscv-software-src/opensbi.git
