@@ -1,0 +1,5 @@
+rootfs/
+rootsf/*
+*.swp
+*.o
+*.bin
