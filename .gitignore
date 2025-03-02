@@ -3,4 +3,5 @@ rootsf/*
 *.swp
 *.o
 *.bin
+*.img
 initramfs*
