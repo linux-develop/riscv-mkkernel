@@ -1,3 +1,11 @@
 [submodule "linux"]
 	path = linux
 	url = git@github.com:linux-develop/linux.git
+
+[submodule "busybox"]
+	path = busybox
+	url = git@github.com:linux-develop/busybox.git
+
+[submodule "opensbi"]
+	path = opensbi
+	url = git@github.com:riscv/opensbi.git
