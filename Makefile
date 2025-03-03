@@ -39,18 +39,18 @@ $(ROOTFS):
 	fi
 	make -C busybox ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -j$(NPROC)
 	make -C busybox ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) install
-	qemu-img create $(ROOTFS) 4g;
-	mkfs.ext4 $(ROOTFS);
-	mkdir -p rootfs;
-	sudo mount -o loop $(ROOTFS) rootfs;
-	sudo mkdir -p rootfs/etc rootfs/dev rootfs/proc rootfs/sys rootfs/etc/init.d rootfs/bin rootfs/sbin rootfs/proc rootfs/usr;
-	sudo cp -a busybox/_install/* rootfs/;
-	sudo sh -c ' echo "#!/bin/sh" >> rootfs/etc/init.d/rcS';
-	sudo sh -c ' echo "mount -t proc none /proc" >> rootfs/etc/init.d/rcS';
-	sudo sh -c ' echo "mount -t sysfs none /sys" >> rootfs/etc/init.d/rcS';
-	sudo sh -c ' echo "/sbin/mdev -s" >> rootfs/etc/init.d/rcS';
-	sudo chmod +x rootfs/etc/init.d/rcS;
-	sudo umount rootfs;
+	qemu-img create $(ROOTFS) 4g
+	mkfs.ext4 $(ROOTFS)
+	mkdir -p rootfs
+	sudo mount -o loop $(ROOTFS) rootfs
+	sudo mkdir -p rootfs/etc rootfs/dev rootfs/proc rootfs/sys rootfs/etc/init.d rootfs/bin rootfs/sbin rootfs/proc rootfs/usr rootfs/home rootfs/mnt
+	sudo cp -a busybox/_install/* rootfs/
+	sudo sh -c ' echo "#!/bin/sh" >> rootfs/etc/init.d/rcS'
+	sudo sh -c ' echo "mount -t proc none /proc" >> rootfs/etc/init.d/rcS'
+	sudo sh -c ' echo "mount -t sysfs none /sys" >> rootfs/etc/init.d/rcS'
+	sudo sh -c ' echo "/sbin/mdev -s" >> rootfs/etc/init.d/rcS'
+	sudo chmod +x rootfs/etc/init.d/rcS
+	sudo umount rootfs
 
 clean_fs:
 	rm -rf rootfs
