@@ -9,3 +9,6 @@
 [submodule "busybox"]
 	path = busybox
 	url = git@github.com:linux-develop/busybox.git
+[submodule "qemu"]
+	path = qemu
+	url = git@github.com:qemu/qemu.git
