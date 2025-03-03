@@ -24,11 +24,20 @@ run: $(KERNEL) $(SBI) $(ROOTFS)
 all: $(KERNEL) $(SBI) $(ROOTFS)
 
 $(KERNEL):
-	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) defconfig
+	if [ "$(MENU)" = "y" ]; then \
+		echo "Configuring Linux with menuconfig..."; \
+		make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) menuconfig; \
+	else \
+		echo "Skipping Busybox menuconfig (MENU not set to y)"; \
+	fi
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -j$(NPROC)
+
+linux: $(KERNEL)
 
 $(SBI):
 	make -C opensbi PLATFORM=$(OPENSBI_PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) PLATFORM_RISCV_XLEN=$(XLEN)
+
+opensbi: $(SBI)
 
 $(ROOTFS):
 	if [ "$(MENU)" = "y" ]; then \
@@ -52,10 +61,19 @@ $(ROOTFS):
 	sudo chmod +x rootfs/etc/init.d/rcS
 	sudo umount rootfs
 
+rootfs: $(ROOTFS)
+
 clean_fs:
 	rm -rf rootfs
 	make -C busybox clean
 	rm $(ROOTFS)
+
+clean_linux:
+	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
+
+clean_opensbi:
+	make -C opensbi clean
+	make -C busybox clean
 
 clean:
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
@@ -64,4 +82,4 @@ clean:
 	rm -rf rootfs
 	rm $(ROOTFS)
 
-.PHONY: clean clean_fs
+.PHONY: clean clean_fs clean_linux clean_opensbi linux opensbi rootfs
