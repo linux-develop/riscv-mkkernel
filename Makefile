@@ -3,7 +3,7 @@ XLEN = 64
 OPENSBI_PLATFORM = generic
 ARCH = riscv
 CROSS_COMPILE = riscv64-linux-gnu-
-QEMU = qemu-system-riscv64
+QEMU = qemu/build/qemu-system-riscv64
 MEMORY = 4G
 SBI = ./opensbi/build/platform/generic/firmware/fw_jump.bin
 KERNEL = ./linux/arch/riscv/boot/Image
@@ -21,7 +21,7 @@ run: $(KERNEL) $(SBI) $(ROOTFS)
 	@sleep 1
 	${QEMU} $(FLAG)
 
-all: $(KERNEL) $(SBI) $(ROOTFS)
+all: $(KERNEL) $(SBI) $(ROOTFS) $(QEMU)
 
 $(KERNEL):
 	if [ "$(MENU)" = "y" ]; then \
@@ -63,7 +63,12 @@ $(ROOTFS):
 
 rootfs: $(ROOTFS)
 
-clean_fs:
+$(QEMU):
+	make -C qemu/build -j$(NPROC)
+
+qemu: $(QEMU)
+
+clean_rootfs:
 	rm -rf rootfs
 	make -C busybox clean
 	rm $(ROOTFS)
@@ -75,6 +80,9 @@ clean_opensbi:
 	make -C opensbi clean
 	make -C busybox clean
 
+clean_qemu:
+	make -C qemu/build clean
+
 clean:
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
 	make -C opensbi clean
@@ -82,4 +90,4 @@ clean:
 	rm -rf rootfs
 	rm $(ROOTFS)
 
-.PHONY: clean clean_fs clean_linux clean_opensbi linux opensbi rootfs
+.PHONY: clean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs

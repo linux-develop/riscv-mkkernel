@@ -4,7 +4,7 @@
 
 [submodule "opensbi"]
 	path = opensbi
-	url = git@github.com:riscv-software-src/opensbi.git
+	url = git@github.com:linux-develop/opensbi.git
 
 [submodule "busybox"]
 	path = busybox
