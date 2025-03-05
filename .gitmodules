@@ -1,14 +1,12 @@
 [submodule "linux"]
 	path = linux
 	url = git@github.com:linux-develop/linux.git
-
 [submodule "opensbi"]
 	path = opensbi
 	url = git@github.com:linux-develop/opensbi.git
-
 [submodule "busybox"]
 	path = busybox
 	url = git@github.com:linux-develop/busybox.git
 [submodule "qemu"]
 	path = qemu
-	url = git@github.com:qemu/qemu.git
+	url = git@github.com:linux-develop/qemu.git
