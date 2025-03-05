@@ -3,25 +3,36 @@ XLEN = 64
 OPENSBI_PLATFORM = generic
 ARCH = riscv
 CROSS_COMPILE = riscv64-linux-gnu-
+GDB = gdb-multiarch
+CPU = 1
 QEMU = qemu/build/qemu-system-riscv64
 MEMORY = 4G
-SBI = ./opensbi/build/platform/generic/firmware/fw_jump.bin
+SBI = ./opensbi/build/platform/generic/firmware/fw_jump
+SBI_BIN = $(SBI).bin
+SBI_ELF = $(SBI).elf
 KERNEL = ./linux/arch/riscv/boot/Image
 ROOTFS=rootfs.img
 FLAG = 	-nographic \
 	-machine virt \
 	-m $(MEMORY) \
-	-bios $(SBI) \
+	-smp $(CPU) \
+	-bios $(SBI_BIN) \
 	-kernel $(KERNEL) \
 	-append "console=ttyS0 root=/dev/vda ro" \
 	-drive file=$(ROOTFS),format=raw,if=virtio
 
-run: $(KERNEL) $(SBI) $(ROOTFS)
+run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
 	${QEMU} $(FLAG)
 
-all: $(KERNEL) $(SBI) $(ROOTFS) $(QEMU)
+debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
+	$(QEMU) $(FLAG) -s -S
+
+gdb: $(SBI_ELF)
+	$(GDB) $(SBI_ELF)
+
+all: $(KERNEL) $(SBI_BIN) $(ROOTFS) $(QEMU)
 
 $(KERNEL):
 	if [ "$(MENU)" = "y" ]; then \
@@ -34,10 +45,15 @@ $(KERNEL):
 
 linux: $(KERNEL)
 
-$(SBI):
-	make -C opensbi PLATFORM=$(OPENSBI_PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) PLATFORM_RISCV_XLEN=$(XLEN)
+$(SBI_BIN):
+	if [ "$(DEBUG)" = "y" ]; then \
+		echo "Compile opensbi with debug mode..."; \
+		make -C opensbi PLATFORM=$(OPENSBI_PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) PLATFORM_RISCV_XLEN=$(XLEN) DEBUG=1; \
+	else \
+		make -C opensbi PLATFORM=$(OPENSBI_PLATFORM) CROSS_COMPILE=$(CROSS_COMPILE) PLATFORM_RISCV_XLEN=$(XLEN); \
+	fi
 
-opensbi: $(SBI)
+opensbi: $(SBI_BIN)
 
 $(ROOTFS):
 	if [ "$(MENU)" = "y" ]; then \
@@ -87,7 +103,8 @@ clean:
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
 	make -C opensbi clean
 	make -C busybox clean
+	make -C qemu/build clean
 	rm -rf rootfs
 	rm $(ROOTFS)
 
-.PHONY: clean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs
+.PHONY: clean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs debug gdb
