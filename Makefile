@@ -39,7 +39,7 @@ $(KERNEL):
 		echo "Configuring Linux with menuconfig..."; \
 		make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) menuconfig; \
 	else \
-		echo "Skipping Busybox menuconfig (MENU not set to y)"; \
+		echo "Skipping Linux menuconfig (MENU not set to y)"; \
 	fi
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -j$(NPROC)
 
