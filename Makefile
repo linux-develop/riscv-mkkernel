@@ -94,7 +94,6 @@ clean_linux:
 
 clean_opensbi:
 	make -C opensbi clean
-	make -C busybox clean
 
 clean_qemu:
 	make -C qemu/build clean
