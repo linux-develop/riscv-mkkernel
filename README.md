@@ -16,6 +16,13 @@ $ git submodule update --init --recursive
 
 # compile all the project
 ``` bash
+# first try
+$ cd qemu
+$ mkdir -p build
+$ cd build
+$ ../configure --target-list=riscv64-softmmu
+
+# next time
 $ make all MENU=y
 ```
 
@@ -24,7 +31,7 @@ $ make all MENU=y
 # first try
 $ make linux MENU=y
 
-# later
+# next time
 $ make linux
 ```
 
@@ -38,7 +45,7 @@ $ make opensbi
 # first try
 $ make rootfs MENU=y
 
-# later
+# next time
 $ make rootfs
 ```
 
@@ -48,10 +55,9 @@ $ make rootfs
 $ cd qemu
 $ mkdir -p build
 $ cd build
-$ ../configure
-## wait for a period of time
-$ make
+$ ../configure --target-list=riscv64-softmmu
+$ make -j$(nproc)
 
-# later
+# next time
 $ make qemu
 ```
