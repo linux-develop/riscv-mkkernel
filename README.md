@@ -22,7 +22,7 @@ $ mkdir -p build
 $ cd build
 $ ../configure --target-list=riscv64-softmmu
 
-# next time
+# next time in top directory
 $ make all MENU=y
 ```
 
@@ -31,7 +31,7 @@ $ make all MENU=y
 # first try
 $ make linux MENU=y
 
-# next time
+# next time in top directory
 $ make linux
 ```
 
@@ -45,7 +45,7 @@ $ make opensbi
 # first try
 $ make rootfs MENU=y
 
-# next time
+# next time in top directory
 $ make rootfs
 ```
 
@@ -58,6 +58,6 @@ $ cd build
 $ ../configure --target-list=riscv64-softmmu
 $ make -j$(nproc)
 
-# next time
+# next time in top directory
 $ make qemu
 ```
