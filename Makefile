@@ -11,6 +11,7 @@ SBI = ./opensbi/build/platform/generic/firmware/fw_jump
 SBI_BIN = $(SBI).bin
 SBI_ELF = $(SBI).elf
 KERNEL = ./linux/arch/riscv/boot/Image
+VMLINUX = ./linux/vmlinux
 ROOTFS=rootfs.img
 FLAG = 	-nographic \
 	-machine virt \
@@ -29,8 +30,8 @@ run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	$(QEMU) $(FLAG) -s -S
 
-gdb: $(SBI_ELF)
-	$(GDB) $(SBI_ELF)
+gdb:
+	$(GDB)
 
 all: $(KERNEL) $(SBI_BIN) $(ROOTFS) $(QEMU)
 
