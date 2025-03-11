@@ -30,8 +30,8 @@ run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	$(QEMU) $(FLAG) -s -S
 
-gdb:
-	$(GDB)
+gdb: $(VMLINUX)
+	$(GDB) $(VMLINUX)
 
 all: $(KERNEL) $(SBI_BIN) $(ROOTFS) $(QEMU)
 
