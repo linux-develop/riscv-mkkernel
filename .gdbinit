@@ -1,7 +1,6 @@
 # debug linux
 # link to qemu
 target remote localhost:1234
-
 add-symbol-file ./opensbi/build/platform/generic/firmware/fw_jump.elf 0x80000000
 
 b *0x80201000
