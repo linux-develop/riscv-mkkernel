@@ -33,6 +33,9 @@ debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 gdb: $(VMLINUX)
 	$(GDB) $(VMLINUX)
 
+debug_qemu: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
+	$(GDB) -tui -args $(QEMU) $(FLAG)
+
 all: $(KERNEL) $(SBI_BIN) $(ROOTFS) $(QEMU)
 
 $(KERNEL):

@@ -40,6 +40,11 @@ $ make linux
 $ make opensbi
 ```
 
+## enable debug mode
+``` bash
+$ make opensbi DEBUG=y
+```
+
 # only compile rootfs
 ``` bash
 # first try
@@ -60,4 +65,9 @@ $ make -j$(nproc)
 
 # next time in top directory
 $ make qemu
+```
+
+## enable debug mode
+```bash
+$ ../configure --target-list=riscv64-softmmu --enable-debug
 ```
