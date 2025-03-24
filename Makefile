@@ -20,7 +20,8 @@ FLAG = 	-nographic \
 	-bios $(SBI_BIN) \
 	-kernel $(KERNEL) \
 	-append "console=ttyS0 root=/dev/vda ro" \
-	-drive file=$(ROOTFS),format=raw,if=virtio
+	-drive file=$(ROOTFS),format=raw,if=virtio \
+	-D qemu.log -d cpu,mmu,page
 
 run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	@echo "press Ctrl A and then press X to exit qemu"
@@ -110,4 +111,12 @@ clean:
 	rm -rf rootfs
 	rm $(ROOTFS)
 
-.PHONY: clean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs debug gdb
+distclean:
+	make -C linux disclean
+	make -C opensbi distclean
+	make -C busybox distclean
+	make -C qemu/build distclean
+	rm -rf rootfs
+	rm $(ROOTFS)
+
+.PHONY: clean distclean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs debug gdb debug_qemu
