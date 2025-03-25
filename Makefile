@@ -26,7 +26,7 @@ run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
 	if [ "$(LOG)" = "y" ]; then \
-		${QEMU} $(FLAG) -D qemu.log -d cpu,mmu,page; \
+		${QEMU} $(FLAG) -D qemu.log -d cpu,mmu,page,invalid_mem; \
 	else \
 		${QEMU} $(FLAG); \
 	fi
