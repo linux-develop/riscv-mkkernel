@@ -20,13 +20,16 @@ FLAG = 	-nographic \
 	-bios $(SBI_BIN) \
 	-kernel $(KERNEL) \
 	-append "console=ttyS0 root=/dev/vda ro" \
-	-drive file=$(ROOTFS),format=raw,if=virtio \
-	-D qemu.log -d cpu,mmu,page
+	-drive file=$(ROOTFS),format=raw,if=virtio
 
 run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
-	${QEMU} $(FLAG)
+	if [ "$(LOG)" = "y" ]; then \
+		${QEMU} $(FLAG) -D qemu.log -d cpu,mmu,page; \
+	else \
+		${QEMU} $(FLAG); \
+	fi
 
 debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	$(QEMU) $(FLAG) -s -S
