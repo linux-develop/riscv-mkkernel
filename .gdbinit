@@ -3,16 +3,14 @@
 target remote localhost:1234
 add-symbol-file ./opensbi/build/platform/generic/firmware/fw_jump.elf 0x80000000
 
-# set_satp_mode
-# b *0x80c0606e
 # relocate_enable_mmu
-b *0x80201000
-# csrw satp, a5
-# b *0x80c061d6
-# setup_vm
-b *0x80c0644e
+# b *0x82001000
+# _start
+# b *0x82000000
+b setup_vm_final
+b setup_bootmem
 
-layout asm
+layout split
 
 # public
 set output-radix 16
