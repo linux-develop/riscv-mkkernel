@@ -21,24 +21,33 @@ FLAG = 	-nographic \
 	-kernel $(KERNEL) \
 	-append "console=ttyS0 root=/dev/vda ro" \
 	-drive file=$(ROOTFS),format=raw,if=virtio
+QEMU_LOG_FLAG = -D qemu.log -d exec,cpu,mmu,page,invalid_mem
 
-run: $(KERNEL) $(SBI_BIN) $(ROOTFS)
+run: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
 	if [ "$(LOG)" = "y" ]; then \
-		${QEMU} $(FLAG) -D qemu.log -d cpu,mmu,page,invalid_mem; \
+		${QEMU} $(FLAG) $(QEMU_LOG_FLAG); \
 	else \
 		${QEMU} $(FLAG); \
 	fi
 
-debug: $(KERNEL) $(SBI_BIN) $(ROOTFS)
-	$(QEMU) $(FLAG) -s -S
+debug: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
+	if [ "$(LOG)" = "y" ]; then \
+		$(QEMU) $(FLAG) -s -S $(QEMU_LOG_FLAG); \
+	else \
+		$(QEMU) $(FLAG) -s -S; \
+	fi	
 
 gdb: $(VMLINUX)
 	$(GDB) $(VMLINUX)
 
 debug_qemu: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
-	$(GDB) -tui -args $(QEMU) $(FLAG)
+	if [ "$(LOG)" = "y" ]; then \
+		$(GDB) -tui -args $(QEMU) $(FLAG) $(QEMU_LOG_FLAG); \
+	else \
+		$(GDB) -tui -args $(QEMU) $(FLAG); \
+	fi
 
 all: $(KERNEL) $(SBI_BIN) $(ROOTFS) $(QEMU)
 
