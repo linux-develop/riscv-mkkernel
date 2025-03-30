@@ -69,5 +69,5 @@ $ make qemu
 
 ## enable debug mode
 ```bash
-$ ../configure --target-list=riscv64-softmmu --enable-debug
+$ ../configure --target-list=riscv64-softmmu --enable-debug --enable-debug-tcg
 ```
