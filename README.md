@@ -28,7 +28,7 @@ $ make all MENU=y
 
 # only compile linux
 ``` bash
-# first try
+# first try in top directory
 $ make linux MENU=y
 
 # next time in top directory
@@ -37,6 +37,7 @@ $ make linux
 
 # only compile opensbi
 ``` bash
+# in top directory
 $ make opensbi
 ```
 
@@ -47,7 +48,7 @@ $ make opensbi DEBUG=y
 
 # only compile rootfs
 ``` bash
-# first try
+# first try in top directory
 $ make rootfs MENU=y
 
 # next time in top directory
