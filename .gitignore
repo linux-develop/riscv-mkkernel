@@ -5,4 +5,5 @@ rootsf/*
 *.bin
 *.img
 *.log
+log
 initramfs*
