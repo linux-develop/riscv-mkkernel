@@ -21,8 +21,11 @@ $ cd qemu
 $ mkdir -p build
 $ cd build
 $ ../configure --target-list=riscv64-softmmu
+```
+> choose `build static binary` in busybox's menuconfig
 
-# next time in top directory
+## next time in top directory
+``` bash
 $ make all MENU=y
 ```
 
