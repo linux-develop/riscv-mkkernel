@@ -79,6 +79,7 @@ $(ROOTFS):
 	else \
 		echo "Skipping Busybox menuconfig (MENU not set to y)"; \
 	fi
+	export LDFLAGS="-Wl,-z,max-page-size=0x4000"
 	make -C busybox ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -j$(NPROC)
 	make -C busybox ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) install
 	qemu-img create $(ROOTFS) 4g
