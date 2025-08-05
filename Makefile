@@ -92,6 +92,10 @@ $(ROOTFS):
 	sudo sh -c ' echo "mount -t sysfs none /sys" >> rootfs/etc/init.d/rcS'
 	sudo sh -c ' echo "/sbin/mdev -s" >> rootfs/etc/init.d/rcS'
 	sudo chmod +x rootfs/etc/init.d/rcS
+	sudo mkdir -p rootfs/test
+	sudo cp -a scripts/*.sh rootfs/test/
+	sudo chmod +x rootfs/test/*.sh
+	sudo sh -c ' echo "/test/01_mem_usage.sh" >> rootfs/etc/init.d/rcS'
 	sudo umount rootfs
 
 rootfs: $(ROOTFS)
