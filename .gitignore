@@ -7,3 +7,4 @@ rootsf/*
 *.log
 log
 initramfs*
+.config
