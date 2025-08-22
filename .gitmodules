@@ -10,3 +10,6 @@
 [submodule "qemu"]
 	path = qemu
 	url = git@github.com:linux-develop/qemu.git
+[submodule "buildroot"]
+	path = buildroot
+	url = ./buildroot
