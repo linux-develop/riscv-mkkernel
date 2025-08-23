@@ -4,7 +4,7 @@ OPENSBI_PLATFORM = generic
 ARCH = riscv
 CROSS_COMPILE = riscv64-linux-gnu-
 GDB = gdb-multiarch
-CPU = 1
+CPU = 4
 MEMORY = 4G
 
 QEMU = qemu/build/qemu-system-riscv64
@@ -35,7 +35,7 @@ OSBI_ELF = $(OSBI).elf
 OKERNEL = ./linux-origin/arch/riscv/boot/Image
 OVMLINUX = ./linux-origin/vmlinux
 OBUSYBOX=rootfs-origin.img
-OBUILDROOT=buildroot/output/images/rootfs.ext2
+OBUILDROOT=buildroot-origin/output/images/rootfs.ext2
 OFLAG = -nographic \
         -machine virt \
         -m $(MEMORY) \
@@ -46,7 +46,7 @@ OFLAG = -nographic \
         -drive file=$(OBUILDROOT),if=virtio
         #-drive file=$(OBUSYBOX),format=raw,if=virtio
 
-run: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
+run: $(QEMU) $(KERNEL) $(SBI_BIN) $(BUILDROOT)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
 	if [ "$(LOG)" = "y" ]; then \
@@ -55,7 +55,7 @@ run: $(QEMU) $(KERNEL) $(SBI_BIN) $(ROOTFS)
 		${QEMU} $(FLAG); \
 	fi
 
-orun: $(OQEMU) $(OKERNEL) $(OSBI_BIN) $(OROOTFS)
+orun: $(OQEMU) $(OKERNEL) $(OSBI_BIN) $(OBUILDROOT)
 	@echo "press Ctrl A and then press X to exit qemu"
 	@sleep 1
 	if [ "$(LOG)" = "y" ]; then \
@@ -208,7 +208,7 @@ $(OBUILDROOT):
 	fi
 	make -C buildroot-origin -j$(NPROC)
 
-buildroot: $(BUILDROOT)
+obuildroot: $(OBUILDROOT)
 
 
 $(QEMU):
