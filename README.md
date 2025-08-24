@@ -22,7 +22,13 @@ $ mkdir -p build
 $ cd build
 $ ../configure --target-list=riscv64-softmmu
 ```
+## if we use busybox as rootfs
 > choose `build static binary` in busybox's menuconfig
+
+## is we use buildroot as rootfs
+### Target options
+> choose `Target Architecture` as `RISCV`
+> choose `MMU Page Size` as `16KB`
 
 ## next time in top directory
 ``` bash
@@ -50,12 +56,22 @@ $ make opensbi DEBUG=y
 ```
 
 # only compile rootfs
+## busybox
 ``` bash
 # first try in top directory
-$ make rootfs MENU=y
+$ make busybox MENU=y
 
 # next time in top directory
-$ make rootfs
+$ make busybox
+```
+
+## buildroot
+``` bash
+# first try in top directory
+$ make buildroot MENU=y
+
+# next time in top directory
+$ make buildroot
 ```
 
 # only compile qemu
@@ -74,4 +90,14 @@ $ make qemu
 ## enable debug mode
 ```bash
 $ ../configure --target-list=riscv64-softmmu --enable-debug --enable-debug-tcg
+```
+
+# test tool
+## perf
+``` bash
+perf stat -e task-clock,cycles,instructions,iTLB-load-misses,dTLB-load-misses,dTLB-store-misses <your-test-command>
+```
+## iozone
+``` bash
+iozone -a
 ```
