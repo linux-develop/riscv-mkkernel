@@ -15,6 +15,7 @@ KERNEL = ./linux/arch/riscv/boot/Image
 VMLINUX = ./linux/vmlinux
 BUSYBOX= rootfs.img
 BUILDROOT=buildroot/output/images/rootfs.ext2
+PERF=linux/tools/perf/perf
 
 FLAG = 	-nographic \
 	-machine virt \
@@ -36,6 +37,8 @@ OKERNEL = ./linux-origin/arch/riscv/boot/Image
 OVMLINUX = ./linux-origin/vmlinux
 OBUSYBOX=rootfs-origin.img
 OBUILDROOT=buildroot-origin/output/images/rootfs.ext2
+OPERF=linux-origin/tools/perf/perf
+
 OFLAG = -nographic \
         -machine virt \
         -m $(MEMORY) \
@@ -221,10 +224,33 @@ $(OQEMU):
 
 oqemu: $(OQEMU)
 
-clean_rootfs:
+perf: $(PERF)
+	mkdir -p buildroot/output/images/rootfs
+	sudo mount -o loop buildroot/output/images/rootfs.ext2 buildroot/output/images/rootfs
+	cd linux && make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- PKG_CONFIG_SYSROOT_DIR="buildroot/output/images/rootfs" LDFLAGS+="-Wl,-z,common- page-size=16384" NO_LIBELF=1 NO_LIBTRACEEVENT=1 -C tools/perf && cd ..
+	sudo cp linux/tools/perf/perf buildroot/output/images/rootfs/bin
+	sudo umount buildroot/output/images/rootfs
+
+operf: $(OPERF)
+	mkdir -p buildroot-origin/output/images/rootfs
+	sudo mount -o loop buildroot-origin/output/images/rootfs.ext2 buildroot-origin/output/images/rootfs
+	cd linux-origin && make ARCH=riscv CROSS_COMPILE=riscv64-linux-gnu- PKG_CONFIG_SYSROOT_DIR="buildroot-origin/output/images/rootfs" NO_LIBELF=1 NO_LIBTRACEEVENT=1 -C tools/perf && cd ..
+	sudo cp linux-origin/tools/perf/perf buildroot-origin/output/images/rootfs/bin
+	sudo umount buildroot-origin/output/images/rootfs
+
+clean_perf:
+	make -C linux/tools/perf clean
+
+oclean_perf:
+	make -C linux-origin/tools/perf clean
+
+clean_busybox:
 	rm -rf rootfs
 	make -C busybox clean
-	rm $(ROOTFS)
+	rm $(BUSYBOX)
+
+clean_buildroot:
+	make -C buildroot clean
 
 clean_linux:
 	make -C linux ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
@@ -240,6 +266,7 @@ clean:
 	make -C opensbi clean
 	make -C busybox clean
 	make -C qemu/build clean
+	make -C buildroot clean
 	rm -rf rootfs
 	rm $(ROOTFS)
 
@@ -248,13 +275,17 @@ distclean:
 	make -C opensbi distclean
 	make -C busybox distclean
 	make -C qemu/build distclean
+	make -C buildroot distclean
 	rm -rf rootfs
 	rm $(ROOTFS)
 
-oclean_rootfs:
+oclean_busybox:
 	rm -rf rootfs-origin
 	make -C busybox-origin clean
-	rm $(OROOTFS)
+	rm $(OBUSYBOX)
+
+oclean_buildroot:
+	make -C buildroot-origin clean
 
 oclean_linux:
 	make -C linux-origin ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) clean
@@ -270,6 +301,7 @@ oclean:
 	make -C opensbi-origin clean
 	make -C busybox-origin clean
 	make -C qemu-origin/build clean
+	make -C buildroot-origin clean
 	rm -rf rootfs
 	rm $(OROOTFS)
 
@@ -278,7 +310,8 @@ odistclean:
 	make -C opensbi-origin distclean
 	make -C busybox-origin distclean
 	make -C qemu-origin/build distclean
+	make -C buildroot-origin distclean
 	rm -rf rootfs-origin
 	rm $(OROOTFS)
 
-.PHONY: clean distclean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi rootfs debug gdb debug_qemu oclean odistclean oclean_rootfs oclean_linux oclean_opensbi oclean_qemu olinux oopensbi orootfs
+.PHONY: clean distclean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi busybox buildroot obusybox obuildroot debug gdb debug_qemu oclean odistclean oclean_rootfs oclean_linux oclean_opensbi oclean_qemu olinux oopensbi
