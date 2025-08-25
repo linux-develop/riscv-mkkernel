@@ -238,6 +238,19 @@ operf: $(OPERF)
 	sudo cp linux-origin/tools/perf/perf buildroot-origin/output/images/rootfs/bin
 	sudo umount buildroot-origin/output/images/rootfs
 
+test_01:
+	make -C test test_01
+	mkdir -p buildroot/output/images/rootfs
+	sudo mount -o loop buildroot/output/images/rootfs.ext2 buildroot/output/images/rootfs
+	sudo cp test/output/test_01_16kb buildroot/output/images/rootfs/bin
+	sleep 0.5
+	sudo umount buildroot/output/images/rootfs
+	mkdir -p buildroot-origin/output/images/rootfs
+	sudo mount -o loop buildroot-origin/output/images/rootfs.ext2 buildroot-origin/output/images/rootfs
+	sudo cp test/output/test_01_4kb buildroot-origin/output/images/rootfs/bin
+	sleep 0.5
+	sudo umount buildroot-origin/output/images/rootfs
+
 clean_perf:
 	make -C linux/tools/perf clean
 
