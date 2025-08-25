@@ -8,3 +8,5 @@ rootsf/*
 log
 initramfs*
 .config
+output/
+output/*
