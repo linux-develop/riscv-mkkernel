@@ -238,18 +238,21 @@ operf: $(OPERF)
 	sudo cp linux-origin/tools/perf/perf buildroot-origin/output/images/rootfs/bin
 	sudo umount buildroot-origin/output/images/rootfs
 
-test_01:
-	make -C test test_01
+test:
+	make -C test all
 	mkdir -p buildroot/output/images/rootfs
 	sudo mount -o loop buildroot/output/images/rootfs.ext2 buildroot/output/images/rootfs
-	sudo cp test/output/test_01_16kb buildroot/output/images/rootfs/bin
+	sudo cp test/output/test_*_16kb buildroot/output/images/rootfs/bin
 	sleep 0.5
 	sudo umount buildroot/output/images/rootfs
 	mkdir -p buildroot-origin/output/images/rootfs
 	sudo mount -o loop buildroot-origin/output/images/rootfs.ext2 buildroot-origin/output/images/rootfs
-	sudo cp test/output/test_01_4kb buildroot-origin/output/images/rootfs/bin
+	sudo cp test/output/test_*_4kb buildroot-origin/output/images/rootfs/bin
 	sleep 0.5
 	sudo umount buildroot-origin/output/images/rootfs
+
+clean_test:
+	make -C test clean
 
 clean_perf:
 	make -C linux/tools/perf clean
@@ -327,4 +330,4 @@ odistclean:
 	rm -rf rootfs-origin
 	rm $(OROOTFS)
 
-.PHONY: clean distclean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi busybox buildroot obusybox obuildroot debug gdb debug_qemu oclean odistclean oclean_rootfs oclean_linux oclean_opensbi oclean_qemu olinux oopensbi
+.PHONY: clean distclean clean_rootfs clean_linux clean_opensbi clean_qemu linux opensbi busybox buildroot obusybox obuildroot debug gdb debug_qemu oclean odistclean oclean_rootfs oclean_linux oclean_opensbi oclean_qemu olinux oopensbi test clean_test

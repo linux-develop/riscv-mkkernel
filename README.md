@@ -25,9 +25,10 @@ $ ../configure --target-list=riscv64-softmmu
 ## if we use busybox as rootfs
 > choose `build static binary` in busybox's menuconfig
 
-## is we use buildroot as rootfs
+## is we use buildroot as rootfs(default)
 ### Target options
-> choose `Target Architecture` as `RISCV`
+in menuconfig:
+> choose `Target Architecture` as `RISCV`<BR>
 > choose `MMU Page Size` as `16KB`
 
 ## next time in top directory
@@ -43,6 +44,7 @@ $ make linux MENU=y
 # next time in top directory
 $ make linux
 ```
+> select `HAVE_PAGE_SIZE_16KB` and then search '16kb':set MMU page size as 16kb
 
 # only compile opensbi
 ``` bash
@@ -65,7 +67,7 @@ $ make busybox MENU=y
 $ make busybox
 ```
 
-## buildroot
+## buildroot(default)
 ``` bash
 # first try in top directory
 $ make buildroot MENU=y
@@ -95,9 +97,9 @@ $ ../configure --target-list=riscv64-softmmu --enable-debug --enable-debug-tcg
 # test tool
 ## perf
 ``` bash
-perf stat -e task-clock,cycles,instructions,iTLB-load-misses,dTLB-load-misses,dTLB-store-misses <your-test-command>
+$ perf stat -e task-clock,cycles,iTLB-load-misses,dTLB-load-misses,dTLB-store-misses,page-faults,major-faults,minor-faults,cpu-migrations test_01
 ```
 ## iozone
 ``` bash
-iozone -a
+$ iozone -a
 ```
